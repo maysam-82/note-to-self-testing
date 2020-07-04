@@ -39,18 +39,21 @@ class App extends Component<{}, IAppState> {
 
 	handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
-		this.setState(
-			(prevState) => ({
-				notes: [...prevState.notes, this.state.note],
-			}),
-			() => {
-				window.localStorage.setItem(
-					'notes',
-					window.JSON.stringify(this.state.notes)
-				);
-				this.setState({ note: '' });
-			}
-		);
+		const { note } = this.state;
+		if (note) {
+			this.setState(
+				(prevState) => ({
+					notes: [...prevState.notes, this.state.note],
+				}),
+				() => {
+					window.localStorage.setItem(
+						'notes',
+						window.JSON.stringify(this.state.notes)
+					);
+					this.setState({ note: '' });
+				}
+			);
+		}
 	};
 	render() {
 		const { note, notes } = this.state;
