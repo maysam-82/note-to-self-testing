@@ -1,0 +1,7 @@
+.note {
+	width: 90%;
+}
+.delete {
+	width: 10%;
+	cursor: pointer;
+}

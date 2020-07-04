@@ -1,6 +1,11 @@
 import React, { Component } from 'react';
 import { Form, FormControl, Button } from 'react-bootstrap';
 import Note from '../Note';
+import {
+	saveItemToLocalStorage,
+	getItemFromLocalStorage,
+	removeItemFromLocalStorage,
+} from '../../Utilities/storage';
 import './app.css';
 interface IAppState {
 	notes: string[];
@@ -22,10 +27,10 @@ class App extends Component<{}, IAppState> {
 	}
 
 	getNotes = () => {
-		const savedNotes = window.localStorage.getItem('notes');
+		const savedNotes = getItemFromLocalStorage<string[]>('notes');
 		if (savedNotes) {
 			this.setState((prevState) => ({
-				notes: [...prevState.notes, ...JSON.parse(savedNotes)],
+				notes: [...prevState.notes, ...savedNotes],
 			}));
 		} else {
 			return;
@@ -46,14 +51,25 @@ class App extends Component<{}, IAppState> {
 					notes: [...prevState.notes, this.state.note],
 				}),
 				() => {
-					window.localStorage.setItem(
-						'notes',
-						window.JSON.stringify(this.state.notes)
-					);
+					saveItemToLocalStorage<string[]>('notes', this.state.notes);
 					this.setState({ note: '' });
 				}
 			);
 		}
+	};
+	handleDeleteNote = (noteId: number) => {
+		const filteredNotes = this.state.notes.filter(
+			(_, index) => index !== noteId
+		);
+		this.setState(
+			{
+				notes: filteredNotes,
+			},
+			() => {
+				removeItemFromLocalStorage('notes');
+				saveItemToLocalStorage<string[]>('notes', this.state.notes);
+			}
+		);
 	};
 	clearNotes = () => {
 		this.setState(
@@ -61,7 +77,7 @@ class App extends Component<{}, IAppState> {
 				notes: [],
 			},
 			() => {
-				window.localStorage.removeItem('notes');
+				removeItemFromLocalStorage('notes');
 			}
 		);
 	};
@@ -72,7 +88,12 @@ class App extends Component<{}, IAppState> {
 				<h1 className="mt-3 mb-2 text-center">Note To Self</h1>
 				<div className="text-center">
 					{notes.map((note, index) => (
-						<Note key={index} note={note} id={index} />
+						<Note
+							key={index}
+							note={note}
+							id={index}
+							handleDeleteNote={this.handleDeleteNote}
+						/>
 					))}
 				</div>
 				<div
