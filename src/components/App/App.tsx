@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Form, FormControl, Button } from 'react-bootstrap';
 import Note from '../Note';
-
+import './app.css';
 interface IAppState {
 	notes: string[];
 	note: string;
@@ -55,6 +55,16 @@ class App extends Component<{}, IAppState> {
 			);
 		}
 	};
+	clearNotes = () => {
+		this.setState(
+			{
+				notes: [],
+			},
+			() => {
+				window.localStorage.removeItem('notes');
+			}
+		);
+	};
 	render() {
 		const { note, notes } = this.state;
 		return (
@@ -65,10 +75,11 @@ class App extends Component<{}, IAppState> {
 						<Note key={index} note={note} id={index} />
 					))}
 				</div>
-				<div className="p-2">
+				<div
+					className={`pt-2 pb-2 mt-2 ${notes.length > 0 ? 'border-top' : ''}`}
+				>
 					<Form
-						inline
-						className="d-flex justify-content-center"
+						className="d-flex justify-content-between"
 						onSubmit={(event: React.FormEvent<HTMLFormElement>) =>
 							this.handleSubmit(event)
 						}
@@ -78,11 +89,17 @@ class App extends Component<{}, IAppState> {
 								this.handleOnChange(event)
 							}
 							value={note}
+							className="form-control-input"
 						/>
-						<Button className="ml-2" type="submit">
+						<Button className="button-submit" type="submit">
 							Submit
 						</Button>
 					</Form>
+					<div className="pb-2 pt-2 d-flex justify-content-center">
+						<Button onClick={this.clearNotes} variant="danger" block>
+							Clear Notes
+						</Button>
+					</div>
 				</div>
 			</div>
 		);

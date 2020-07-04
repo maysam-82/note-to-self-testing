@@ -1,0 +1,7 @@
+.button-submit {
+	width: 30%;
+}
+
+.form-control-input {
+	width: calc(70% - 1rem) !important;
+}
