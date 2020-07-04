@@ -12,7 +12,8 @@ const App: React.SFC = () => {
 		setNote(note);
 	};
 
-	const handleSubmit = () => {
+	const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+		event.preventDefault();
 		setNotes([...notes, note]);
 		setNote('');
 	};
@@ -20,23 +21,29 @@ const App: React.SFC = () => {
 	return (
 		<div className="container">
 			<h1 className="mt-3 mb-2 text-center">Note To Self</h1>
-			<div className="mb-2">
-				<Form inline className="d-flex justify-content-center">
+			<div className="text-center">
+				{notes.map((note, index) => (
+					<Note note={note} id={index} />
+				))}
+			</div>
+			<div className="p-2">
+				<Form
+					inline
+					className="d-flex justify-content-center"
+					onSubmit={(event: React.FormEvent<HTMLFormElement>) =>
+						handleSubmit(event)
+					}
+				>
 					<FormControl
 						onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
 							handleOnChange(event)
 						}
 						value={note}
 					/>
-					<Button className="ml-2" onClick={handleSubmit}>
+					<Button className="ml-2" type="submit">
 						Submit
 					</Button>
 				</Form>
-			</div>
-			<div className="text-center">
-				{notes.map((note, index) => (
-					<Note note={note} id={index} />
-				))}
 			</div>
 		</div>
 	);

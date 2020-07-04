@@ -6,7 +6,7 @@ interface INote {
 }
 
 const Note: React.SFC<INote> = ({ note, id }) => {
-	return <div className="mt-1">{note}</div>;
+	return <div className="mt-1 border rounded p-2 text-left">{note}</div>;
 };
 
 export default Note;
