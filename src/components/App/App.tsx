@@ -1,52 +1,89 @@
-import React, { useState } from 'react';
+import React, { Component } from 'react';
 import { Form, FormControl, Button } from 'react-bootstrap';
-
 import Note from '../Note';
 
-const App: React.SFC = () => {
-	const [note, setNote] = useState('');
-	const [notes, setNotes] = useState<string[]>([]);
+interface IAppState {
+	notes: string[];
+	note: string;
+}
 
-	const handleOnChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+class App extends Component<{}, IAppState> {
+	constructor(props: {}) {
+		super(props);
+
+		this.state = {
+			note: '',
+			notes: [],
+		};
+	}
+
+	componentDidMount() {
+		this.getNotes();
+	}
+
+	getNotes = () => {
+		const savedNotes = window.localStorage.getItem('notes');
+		if (savedNotes) {
+			this.setState((prevState) => ({
+				notes: [...prevState.notes, ...JSON.parse(savedNotes)],
+			}));
+		} else {
+			return;
+		}
+	};
+
+	handleOnChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 		const note = event.target.value;
-		setNote(note);
+		this.setState((prevState) => ({ note }));
 	};
 
-	const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+	handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
-		setNotes([...notes, note]);
-		setNote('');
+		this.setState(
+			(prevState) => ({
+				notes: [...prevState.notes, this.state.note],
+			}),
+			() => {
+				window.localStorage.setItem(
+					'notes',
+					window.JSON.stringify(this.state.notes)
+				);
+				this.setState({ note: '' });
+			}
+		);
 	};
-
-	return (
-		<div className="container">
-			<h1 className="mt-3 mb-2 text-center">Note To Self</h1>
-			<div className="text-center">
-				{notes.map((note, index) => (
-					<Note note={note} id={index} />
-				))}
-			</div>
-			<div className="p-2">
-				<Form
-					inline
-					className="d-flex justify-content-center"
-					onSubmit={(event: React.FormEvent<HTMLFormElement>) =>
-						handleSubmit(event)
-					}
-				>
-					<FormControl
-						onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
-							handleOnChange(event)
+	render() {
+		const { note, notes } = this.state;
+		return (
+			<div className="container">
+				<h1 className="mt-3 mb-2 text-center">Note To Self</h1>
+				<div className="text-center">
+					{notes.map((note, index) => (
+						<Note key={index} note={note} id={index} />
+					))}
+				</div>
+				<div className="p-2">
+					<Form
+						inline
+						className="d-flex justify-content-center"
+						onSubmit={(event: React.FormEvent<HTMLFormElement>) =>
+							this.handleSubmit(event)
 						}
-						value={note}
-					/>
-					<Button className="ml-2" type="submit">
-						Submit
-					</Button>
-				</Form>
+					>
+						<FormControl
+							onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+								this.handleOnChange(event)
+							}
+							value={note}
+						/>
+						<Button className="ml-2" type="submit">
+							Submit
+						</Button>
+					</Form>
+				</div>
 			</div>
-		</div>
-	);
-};
+		);
+	}
+}
 
 export default App;
