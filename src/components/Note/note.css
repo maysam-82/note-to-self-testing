@@ -1,7 +1,11 @@
 .note {
-	width: 90%;
+	width: 80%;
 }
 .delete {
+	width: 10%;
+	cursor: pointer;
+}
+.edit {
 	width: 10%;
 	cursor: pointer;
 }

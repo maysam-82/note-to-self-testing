@@ -10,6 +10,7 @@ import './app.css';
 interface IAppState {
 	notes: string[];
 	note: string;
+	selectedNoteId: string;
 }
 
 class App extends Component<{}, IAppState> {
@@ -19,6 +20,7 @@ class App extends Component<{}, IAppState> {
 		this.state = {
 			note: '',
 			notes: [],
+			selectedNoteId: '',
 		};
 	}
 
@@ -44,18 +46,28 @@ class App extends Component<{}, IAppState> {
 
 	handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
-		const { note } = this.state;
+		const { note, selectedNoteId } = this.state;
 		if (note) {
-			this.setState(
-				(prevState) => ({
-					notes: [...prevState.notes, this.state.note],
-				}),
-				() => {
-					saveItemToLocalStorage<string[]>('notes', this.state.notes);
-					this.setState({ note: '' });
-				}
-			);
+			if (selectedNoteId) {
+				const noteId = parseInt(selectedNoteId);
+				const clonedNotes = [...this.state.notes];
+				clonedNotes[noteId] = this.state.note;
+				this.setState({ notes: clonedNotes, selectedNoteId: '' }, () =>
+					this.saveNote()
+				);
+			} else {
+				this.setState(
+					(prevState) => ({
+						notes: [...prevState.notes, this.state.note],
+					}),
+					() => this.saveNote()
+				);
+			}
 		}
+	};
+	saveNote = () => {
+		saveItemToLocalStorage<string[]>('notes', this.state.notes);
+		this.setState({ note: '' });
 	};
 	handleDeleteNote = (noteId: number) => {
 		const filteredNotes = this.state.notes.filter(
@@ -81,21 +93,29 @@ class App extends Component<{}, IAppState> {
 			}
 		);
 	};
+	handleEditNote = (noteId: number) => {
+		const selectedNote = this.state.notes.find((_, index) => index === noteId);
+		if (selectedNote) {
+			this.setState({ note: selectedNote, selectedNoteId: noteId.toString() });
+		}
+	};
+	renderNotes = () => {
+		return this.state.notes.map((note, index) => (
+			<Note
+				key={index}
+				note={note}
+				id={index}
+				handleDeleteNote={this.handleDeleteNote}
+				handleEditNote={this.handleEditNote}
+			/>
+		));
+	};
 	render() {
-		const { note, notes } = this.state;
+		const { note, notes, selectedNoteId } = this.state;
 		return (
 			<div className="container">
 				<h1 className="mt-3 mb-2 text-center">Note To Self</h1>
-				<div className="text-center">
-					{notes.map((note, index) => (
-						<Note
-							key={index}
-							note={note}
-							id={index}
-							handleDeleteNote={this.handleDeleteNote}
-						/>
-					))}
-				</div>
+				<div className="text-center">{this.renderNotes()}</div>
 				<div
 					className={`pt-2 pb-2 mt-2 ${notes.length > 0 ? 'border-top' : ''}`}
 				>
@@ -113,7 +133,7 @@ class App extends Component<{}, IAppState> {
 							className="form-control-input"
 						/>
 						<Button className="button-submit" type="submit">
-							Submit
+							{!selectedNoteId ? 'Submit' : 'Edit'}
 						</Button>
 					</Form>
 					<div className="pb-2 pt-2 d-flex justify-content-center">
