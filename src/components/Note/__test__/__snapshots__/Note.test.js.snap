@@ -1,0 +1,25 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Note Component should render Note component 1`] = `
+<div
+  className="d-flex border rounded align-items-center mt-1"
+>
+  <div
+    className="  p-2 text-left note"
+  >
+    test note
+  </div>
+  <div
+    className="edit pt-2 pb-2"
+    onClick={[Function]}
+  >
+    ✍
+  </div>
+  <div
+    className="delete pt-2 pb-2"
+    onClick={[Function]}
+  >
+    ✖
+  </div>
+</div>
+`;
