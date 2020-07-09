@@ -1,0 +1,80 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`App component should render App component 1`] = `
+<App>
+  <div
+    className="container"
+  >
+    <h1
+      className="mt-3 mb-2 text-center"
+    >
+      Note To Self
+    </h1>
+    <div
+      className="text-center"
+    />
+    <div
+      className="pt-2 pb-2 mt-2 "
+    >
+      <Form
+        className="d-flex justify-content-between"
+        inline={false}
+        onSubmit={[Function]}
+      >
+        <form
+          className="d-flex justify-content-between"
+          onSubmit={[Function]}
+        >
+          <FormControl
+            className="form-control-input"
+            onChange={[Function]}
+            value=""
+          >
+            <input
+              className="form-control-input form-control"
+              onChange={[Function]}
+              value=""
+            />
+          </FormControl>
+          <Button
+            active={false}
+            className="button-submit"
+            disabled={false}
+            type="submit"
+            variant="primary"
+          >
+            <button
+              className="button-submit btn btn-primary"
+              disabled={false}
+              type="submit"
+            >
+              Submit
+            </button>
+          </Button>
+        </form>
+      </Form>
+      <div
+        className="pb-2 pt-2 d-flex justify-content-center button-clear-notes"
+      >
+        <Button
+          active={false}
+          block={true}
+          disabled={false}
+          onClick={[Function]}
+          type="button"
+          variant="danger"
+        >
+          <button
+            className="btn btn-danger btn-block"
+            disabled={false}
+            onClick={[Function]}
+            type="button"
+          >
+            Clear Notes
+          </button>
+        </Button>
+      </div>
+    </div>
+  </div>
+</App>
+`;

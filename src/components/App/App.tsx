@@ -7,7 +7,7 @@ import {
 	removeItemFromLocalStorage,
 } from '../../Utilities/storage';
 import './app.css';
-interface IAppState {
+export interface IAppState {
 	notes: string[];
 	note: string;
 	selectedNoteId: string;
@@ -136,7 +136,7 @@ class App extends Component<{}, IAppState> {
 							{!selectedNoteId ? 'Submit' : 'Edit'}
 						</Button>
 					</Form>
-					<div className="pb-2 pt-2 d-flex justify-content-center">
+					<div className="pb-2 pt-2 d-flex justify-content-center button-clear-notes">
 						<Button onClick={this.clearNotes} variant="danger" block>
 							Clear Notes
 						</Button>
